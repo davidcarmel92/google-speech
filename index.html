@@ -7,7 +7,7 @@
 <body>
 <div id="form">
     <h1>Convert an Audio File</h1>
-    <form id="formFile" enctype="multipart/form-data" action="http://127.0.0.1:8080/googlespeech" method="post">
+    <form id="formFile" enctype="multipart/form-data" action="/" method="post">
         <fieldset>
             <label for="File">Audio File:</label>
             <input type="file" name="audiofile" />
@@ -19,7 +19,7 @@
     </form>
 
     <h1>Convert an Audio Folder</h1>
-    <form id="formFolder" enctype="multipart/form-data" action="http://127.0.0.1:8080/googlespeech" method="post">
+    <form id="formFolder" enctype="multipart/form-data" action="/" method="post">
         <fieldset>
             <label for="File">Audio Folder:</label>
             <input type="file" id="ctrl" webkitdirectory directory multiple name="audiofile" />

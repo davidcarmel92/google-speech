@@ -12,17 +12,19 @@ var Audio_Convertor_API_Key = 'HnBR-hyyLqIp3l4X91E9f37OU3yiAs5-703Qdw5L-BWVFx5PR
 var cloudconvert = new (require('cloudconvert'))(Audio_Convertor_API_Key);
 
 
-app.get('/googlespeech', function(req, res) {
+app.get('/', function(req, res) {
   res.sendFile(path.join(__dirname + '/index.html'))
 });
 
-app.post('/googlespeech', upload.array('audiofile'), function(req, res) {
+app.post('/', upload.array('audiofile'), function(req, res) {
 
   console.log('loading...');
 
   for(i in req.files) {
     audioText(req.files[i].originalname, req.files[i].path)
   };
+
+  res.sendFile(path.join(__dirname + '/sent.html'));
 
 });
 
@@ -50,23 +52,23 @@ function audioText(fileName, filePath) {
   var file = bucket.file(`${fileName}.flac`);
   var newFilePath = `./audio/${fileName}.flac`
 
-  fs.rename(filePath, `${filePath}.${ext}`, function(err) {})
-
-  fs.createReadStream(`${filePath}.${ext}`)
-  .pipe(cloudconvert.convert({
-    "inputformat": ext,
-    "outputformat": "flac",
-    "input": "upload",
-    "converteroptions": {
-      "audio_frequency": "16000",
-      "audio_channels": "1"
-    }
-  }))
-  .pipe(fs.createWriteStream(newFilePath))
-  .on('finish', function() {
-    fs.unlink(`${filePath}.${ext}`, function(err) {});
-    readStream(fileName, newFilePath, file);
-  });
+  // fs.rename(filePath, `${filePath}.${ext}`, function(err) {})
+  //
+  // fs.createReadStream(`${filePath}.${ext}`)
+  // .pipe(cloudconvert.convert({
+  //   "inputformat": ext,
+  //   "outputformat": "flac",
+  //   "input": "upload",
+  //   "converteroptions": {
+  //     "audio_frequency": "16000",
+  //     "audio_channels": "1"
+  //   }
+  // }))
+  // .pipe(fs.createWriteStream(newFilePath))
+  // .on('finish', function() {
+     fs.unlink(`${filePath}.${ext}`, function(err) {});
+     readStream(fileName, newFilePath, file);
+  // });
 }
 
 function runScript(fileName, filePath, file) {
@@ -143,7 +145,7 @@ function runScript(fileName, filePath, file) {
         console.log("The file was saved!");
       });
       file.delete(function(err, apiResponse) {});
-      fs.unlink(filePath, function(err) {});
+      // fs.unlink(filePath, function(err) {});
     })
     .catch(err => {
       console.log('error at client');
