@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Google Speech to Text Audio Conversion</title>
+</head>
+<body>
+<div id="form">
+    <h1>Convert an Audio File</h1>
+    <form id="formFile" enctype="multipart/form-data" action="http://127.0.0.1:8080/googlespeech" method="post">
+        <fieldset>
+            <label for="File">Audio File:</label>
+            <input type="file" name="audiofile" />
+
+            <input type="submit"  value="Submit" />
+
+        </fieldset>
+
+    </form>
+
+    <h1>Convert an Audio Folder</h1>
+    <form id="formFolder" enctype="multipart/form-data" action="http://127.0.0.1:8080/googlespeech" method="post">
+        <fieldset>
+            <label for="File">Audio Folder:</label>
+            <input type="file" id="ctrl" webkitdirectory directory multiple name="audiofile" />
+
+            <input type="submit"  value="Submit" />
+
+        </fieldset>
+    </form>
+
+    <br>
+
+    <h2>Check the 'transcript outputs' file for the transcript results.</h2>
+
+    <h3>Time wait is about 1/3 of the media file time (i.e. a 30 second file takes around 10 seconds to process)</h3>
+
+		<script type="text/javascript" src="./longAudioScript.js"></script>
+</div>
+</body>
+</html>
