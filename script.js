@@ -21,7 +21,7 @@ app.post('/', upload.array('audiofile'), function(req, res) {
   console.log('loading...');
 
   for(i in req.files) {
-    audioText(req.files[i].originalname, req.files[i].path)
+    audioText(req.files[i].originalname, req.files[i].path, res)
   };
 
   res.sendFile(path.join(__dirname + '/sent.html'));
@@ -44,7 +44,7 @@ const storage = Storage({
 
 var bucket;
 
-function audioText(fileName, filePath) {
+function audioText(fileName, filePath, res) {
 
   bucket = storage.bucket('audio-tests');
   var ext = fileName.substr(fileName.lastIndexOf(".")+1);
@@ -67,11 +67,11 @@ function audioText(fileName, filePath) {
   // .pipe(fs.createWriteStream(newFilePath))
   // .on('finish', function() {
      fs.unlink(`${filePath}.${ext}`, function(err) {});
-     readStream(fileName, newFilePath, file);
+     readStream(fileName, newFilePath, file, res);
   // });
 }
 
-function runScript(fileName, filePath, file) {
+function runScript(fileName, filePath, file, res) {
 
   var fileExt = `${fileName}.flac`;
 
@@ -138,11 +138,13 @@ function runScript(fileName, filePath, file) {
       var percent = response.results[0].alternatives[0].confidence * 100;
       percent = percent.toFixed(1) + "%";
       transcription = `\nTranscription: ${transcription} \n\nConfidence Level: ${percent}`
-      fs.writeFile(`./transcript outputs/${fileName}.txt`, transcription, function(err) {
+      var transcriptFile = `./transcript outputs/${fileName}.txt`
+      fs.writeFile(transcriptFile, transcription, function(err) {
         if(err) {
             return console.log(err);
         }
         console.log("The file was saved!");
+        res.download(transcriptFile)
       });
       file.delete(function(err, apiResponse) {});
       // fs.unlink(filePath, function(err) {});
@@ -153,13 +155,13 @@ function runScript(fileName, filePath, file) {
     });
 }
 
-function readStream(fileName, filePath, file) {
+function readStream(fileName, filePath, file, res) {
   fs.createReadStream(filePath)
     .pipe(file.createWriteStream())
     .on('error', function(err) {})
     .on('finish', function() {
 
-      runScript(fileName, filePath, file);
+      runScript(fileName, filePath, file, res);
 
     });
   }
