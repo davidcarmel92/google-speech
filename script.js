@@ -144,7 +144,9 @@ function runScript(fileName, filePath, file, res) {
             return console.log(err);
         }
         console.log("The file was saved!");
-        res.download(transcriptFile)
+        app.get('/download', (req, res) => {
+          res.download(path.join(__dirname, transcriptFile));
+        });
       });
       file.delete(function(err, apiResponse) {});
       // fs.unlink(filePath, function(err) {});
