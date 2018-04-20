@@ -1,5 +1,6 @@
 
 var fs = require('fs');
+var Client = require('ftp');
 
 var express = require('express');
 var bodyParser = require('body-parser');
@@ -66,7 +67,7 @@ function audioText(fileName, filePath, res) {
   // }))
   // .pipe(fs.createWriteStream(newFilePath))
   // .on('finish', function() {
-     fs.unlink(`${filePath}.${ext}`, function(err) {});
+     //fs.unlink(`${filePath}.${ext}`, function(err) {});
      readStream(fileName, newFilePath, file, res);
   // });
 }
@@ -144,12 +145,18 @@ function runScript(fileName, filePath, file, res) {
             return console.log(err);
         }
         console.log("The file was saved!");
-        app.get('/download', (req, res) => {
-          res.download(path.join(__dirname, transcriptFile));
-        });
       });
       file.delete(function(err, apiResponse) {});
-      // fs.unlink(filePath, function(err) {});
+      var c = new Client();
+      c.on('ready', function() {
+        c.get(transcriptFile, function(err, stream) {
+          if (err) throw err;
+          stream.once('close', function() { c.end(); });
+          stream.pipe(fs.createWriteStream(`${fileName}.local-copy.txt`));
+      });
+      c.connect();
+ });
+      //fs.unlink(filePath, function(err) {});
     })
     .catch(err => {
       console.log('error at client');
