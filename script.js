@@ -153,9 +153,9 @@ function runScript(fileName, filePath, file, res) {
           if (err) throw err;
           stream.once('close', function() { c.end(); });
           stream.pipe(fs.createWriteStream(`${fileName}.local-copy.txt`));
-      });
-      c.connect();
- });
+      });  
+    });
+    c.connect();
       //fs.unlink(filePath, function(err) {});
     })
     .catch(err => {
