@@ -147,15 +147,6 @@ function runScript(fileName, filePath, file, res) {
         console.log("The file was saved!");
       });
       file.delete(function(err, apiResponse) {});
-      var c = new Client();
-      c.on('ready', function() {
-        c.get(transcriptFile, function(err, stream) {
-          if (err) throw err;
-          stream.once('close', function() { c.end(); });
-          stream.pipe(fs.createWriteStream(`${fileName}.local-copy.txt`));
-      });  
-    });
-    c.connect();
       //fs.unlink(filePath, function(err) {});
     })
     .catch(err => {
