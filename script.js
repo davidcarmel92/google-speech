@@ -157,6 +157,7 @@ function runScript(fileName, filePath, file, res) {
         .on('error', function(err) {})
         .on('finish', function() {
           console.log('on google cloud')
+          res.end('<p>done</p>')
       })
       fs.unlink(filePath, function(err) {});
     })
