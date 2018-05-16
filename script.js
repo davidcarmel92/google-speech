@@ -53,22 +53,26 @@ function audioText(fileName, filePath, res) {
   var file = bucket.file(`${fileName}.flac`);
   var newFilePath = `./audio/${fileName}.flac`
 
+  console.log(filePath);
+  //
   // fs.rename(filePath, `${filePath}.${ext}`, function(err) {})
   //
-  // fs.createReadStream(`${filePath}.${ext}`)
-  // .pipe(cloudconvert.convert({
-  //   "inputformat": ext,
-  //   "outputformat": "flac",
-  //   "input": "upload",
-  //   "converteroptions": {
-  //     "audio_frequency": "16000",
-  //     "audio_channels": "1"
-  //   }
-  // }))
-  // .pipe(fs.createWriteStream(newFilePath))
+  // // fs.createReadStream(`${filePath}.${ext}`)
+  // // .pipe(cloudconvert.convert({
+  // //   "inputformat": ext,
+  // //   "outputformat": "flac",
+  // //   "input": "upload",
+  // //   "converteroptions": {
+  // //     "audio_frequency": "16000",
+  // //     "audio_channels": "1"
+  // //   }
+  // // }))
+  // // .pipe(
+  // fs.createWriteStream(newFilePath)
   // .on('finish', function() {
-     //fs.unlink(`${filePath}.${ext}`, function(err) {});
-     readStream(fileName, newFilePath, file, res);
+  //   console.log('getting text');
+  //    fs.unlink(`${filePath}.${ext}`, function(err) {});
+      readStream(fileName, filePath, file, res);
   // });
 }
 
@@ -147,6 +151,11 @@ function runScript(fileName, filePath, file, res) {
         console.log("The file was saved!");
       });
       file.delete(function(err, apiResponse) {});
+      var txt = bucket.file(`${fileName}.txt`);
+      fs.createReadStream(transcriptFile)
+        .pipe(txt.createWriteStream())
+        .on('error', function(err) {})
+        .on('finish', function() { console.log('on google cloud') })
       //fs.unlink(filePath, function(err) {});
     })
     .catch(err => {
@@ -156,6 +165,7 @@ function runScript(fileName, filePath, file, res) {
 }
 
 function readStream(fileName, filePath, file, res) {
+  console.log('readstream');
   fs.createReadStream(filePath)
     .pipe(file.createWriteStream())
     .on('error', function(err) {})
