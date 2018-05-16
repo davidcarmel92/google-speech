@@ -155,8 +155,10 @@ function runScript(fileName, filePath, file, res) {
       fs.createReadStream(transcriptFile)
         .pipe(txt.createWriteStream())
         .on('error', function(err) {})
-        .on('finish', function() { console.log('on google cloud') })
-      //fs.unlink(filePath, function(err) {});
+        .on('finish', function() {
+          console.log('on google cloud')
+      })
+      fs.unlink(filePath, function(err) {});
     })
     .catch(err => {
       console.log('error at client');
