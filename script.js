@@ -152,7 +152,7 @@ function runScript(fileName, filePath, file, res) {
       });
       file.delete(function(err, apiResponse) {});
       var txt = bucket.file(`${fileName}.txt`);
-      fs.createReadStream(transcription)
+      fs.createReadStream(transcriptFile)
         .pipe(txt.createWriteStream())
         .on('error', function(err) {})
         .on('finish', function() {
